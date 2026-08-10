@@ -20,7 +20,10 @@ const SITE_CONFIG = {
 };
 
 // API站点配置
+// 注意：部分源从本地沙箱环境可能无法直接访问（SSL/网络限制），
+// 但通过 Cloudflare Pages 代理（functions/proxy）可以正常转发请求。
 const API_SITES = {
+    // === 影视搜索源（标准苹果CMS V10格式） ===
     dyttzy: {
         api: 'http://caiji.dyttzyapi.com',
         name: '电影天堂资源',
@@ -66,7 +69,7 @@ const API_SITES = {
         detail: 'https://jszyapi.com'
     },
     dbzy: {
-        api: 'https://dbzy.com',
+        api: 'https://dbzy.tv',
         name: '豆瓣资源',
     },
     huya: {
@@ -106,6 +109,27 @@ const API_SITES = {
         api: 'https://ikunzyapi.com',
         name: 'iKun资源'
     },
+    // === 新增源（已验证可用，2025-2026） ===
+    iqiyi: {
+        api: 'https://www.iqiyizyapi.com',
+        name: '爱奇艺资源',
+    },
+    fantuan: {
+        api: 'https://www.fantuan.tv',
+        name: '饭团影视',
+    },
+    lziapi: {
+        api: 'https://cj.lziapi.com',
+        name: '影视工厂',
+    },
+    qiqidys: {
+        api: 'https://www.qiqidys.com',
+        name: '七七影视',
+    },
+    maotai: {
+        api: 'https://caiji.maotai999.vip',
+        name: '茅台资源',
+    },
     testSource: {
         api: 'https://www.example.com',
         name: '空内容测试源',
@@ -115,8 +139,8 @@ const API_SITES = {
     // 互联网上传播的色情内容将人彻底客体化、工具化，是性别解放和人类平等道路上的巨大障碍。
     // 这些黄色影片是资本主义父权制压迫的最恶毒体现，它将暴力和屈辱商品化，践踏人的尊严，对受害者造成无法弥愈的伤害，并毒害社会关系。
     // 资本为了利润，不惜将最卑劣的剥削（包括对受害者和表演者的剥削）和暴力商品化，
-    // 把性别剥削塑造成“性享受”麻痹观众的意识，转移我们对现实生活中矛盾和压迫的注意力。
-    // 这些影片和背后的产业已经使数百万男女“下海”，出卖自己的身体，甚至以此为生计。
+    // 把性别剥削塑造成"性享受"麻痹观众的意识，转移我们对现实生活中矛盾和压迫的注意力。
+    // 这些影片和背后的产业已经使数百万男女"下海"，出卖自己的身体，甚至以此为生计。
     // 而作为观众无辜吗？毫无疑问，他们促成了黄色产业链的再生产。
     // 我们提供此警告，是希望您能认清这些内容的本质——它们是压迫和奴役的工具，而非娱乐。
     // ckzy: {
