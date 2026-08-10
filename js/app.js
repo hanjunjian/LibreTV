@@ -1,5 +1,5 @@
 // 全局变量
-let selectedAPIs = JSON.parse(localStorage.getItem('selectedAPIs') || '["tyyszy","dyttzy", "bfzy", "ruyi"]'); // 默认选中天涯资源、暴风资源和如意资源
+let selectedAPIs = JSON.parse(localStorage.getItem('selectedAPIs') || '["bfzy","dyttzy","ruyi","zy360","mdzy","ffzy"]'); // 默认选中暴风、电影天堂、如意、360、魔都、非凡
 let customAPIs = JSON.parse(localStorage.getItem('customAPIs') || '[]'); // 存储自定义API列表
 
 // 添加当前播放的集数索引
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置默认API选择（如果是第一次加载）
     if (!localStorage.getItem('hasInitializedDefaults')) {
-        // 仅选择天涯资源、暴风资源和如意资源
-        selectedAPIs = ["tyyszy", "bfzy","dyttzy", "ruyi"];
+        // 仅选择暴风、电影天堂、如意、360、魔都、非凡
+        selectedAPIs = ["bfzy","dyttzy", "ruyi","zy360","mdzy","ffzy"];
         localStorage.setItem('selectedAPIs', JSON.stringify(selectedAPIs));
         
         // 默认选中过滤开关
@@ -1094,14 +1094,5 @@ function saveStringAsFile(content, fileName) {
     window.URL.revokeObjectURL(url);
 }
 
-// app.js 或路由文件中
-const authMiddleware = require('./middleware/auth');
-const config = require('./config');
-
-// 对所有请求启用鉴权（按需调整作用范围）
-if (config.auth.enabled) {
-  app.use(authMiddleware);
-}
-
-// 或者针对特定路由
-app.use('/api', authMiddleware);
+// LibreTV - 前端搜索应用
+// 版本: v2.0.0
