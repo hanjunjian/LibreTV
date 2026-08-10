@@ -2,7 +2,7 @@
 // 清除所有旧缓存，然后注销自身
 // 该站点不需要 Service Worker — 视频搜索不需要离线缓存
 
-const SELF_DESTRUCT = 'v4-self-destruct';
+const SELF_DESTRUCT = 'v5-self-destruct';
 
 // 立即激活
 self.addEventListener('install', event => {
