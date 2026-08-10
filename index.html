@@ -415,14 +415,7 @@
     <script src="js/app.js?v=3"></script>
     <script src="js/douban.js?v=3"></script>
 
-    <!-- PWA 注册 -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
-            });
-        }
-    </script>
+    <!-- Service Worker 已移除 - 对搜索站点无必要且会导致缓存问题 -->
 
     <!-- 环境变量注入脚本 -->
     <script>

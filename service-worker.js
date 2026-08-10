@@ -1,89 +1,40 @@
-const CACHE_VERSION = 'v3';
-const CACHE_NAME = `libre-tv-${CACHE_VERSION}`;
+// Service Worker 自毁脚本
+// 清除所有旧缓存，然后注销自身
+// 该站点不需要 Service Worker — 视频搜索不需要离线缓存
 
-// 核心资源列表（仅缓存不会频繁变动的库文件）
-const PRECACHE_URLS = [
-  '/',
-  '/css/styles.css',
-  '/libs/tailwindcss.min.js',
-  '/libs/DPlayer.min.js',
-  '/libs/hls.min.js',
-  '/libs/sha256.min.js',
-  '/manifest.json'
-];
+const SELF_DESTRUCT = 'v4-self-destruct';
 
-// Service Worker 安装——预缓存核心资源
+// 立即激活
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('[SW] Pre-caching core resources');
-      return cache.addAll(PRECACHE_URLS).catch(err => {
-        console.warn('[SW] Pre-cache failed for some resources:', err);
-      });
-    })
-  );
-  // 立即激活，不等待旧 SW 关闭
-  self.skipWaiting();
-});
-
-// Service Worker 激活——清理旧缓存
-self.addEventListener('activate', event => {
+  console.log('[SW] Self-destruct install — clearing all caches');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames
-          .filter(name => name.startsWith('libre-tv-') && name !== CACHE_NAME)
-          .map(name => {
-            console.log('[SW] Deleting old cache:', name);
-            return caches.delete(name);
-          })
+        cacheNames.map(name => {
+          console.log('[SW] Deleting cache:', name);
+          return caches.delete(name);
+        })
       );
     })
   );
-  // 立即接管所有页面
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  console.log('[SW] Self-destruct activate — unregistering');
+  // 再次清除所有缓存（以防万一）
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(cacheNames.map(name => caches.delete(name)));
+    }).then(() => {
+      // 注销自身
+      return self.registration.unregister();
+    })
+  );
   self.clients.claim();
 });
 
-// 网络优先策略——确保始终获取最新内容
+// 不拦截任何请求 — 全部直通网络
 self.addEventListener('fetch', event => {
-  // 跳过非 GET 请求和 Chrome 扩展请求
-  if (event.request.method !== 'GET') return;
-  
-  const url = new URL(event.request.url);
-  
-  // 跳过代理请求（/proxy/ 路径）
-  if (url.pathname.startsWith('/proxy/')) return;
-  
-  // 跳过外部资源
-  if (url.origin !== self.location.origin) return;
-  
-  event.respondWith(
-    // 网络优先：先尝试网络，失败时回退到缓存
-    fetch(event.request)
-      .then(networkResponse => {
-        // 成功获取网络响应，更新缓存
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return networkResponse;
-      })
-      .catch(() => {
-        // 网络失败时回退到缓存
-        return caches.match(event.request).then(cachedResponse => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // 如果是导航请求（HTML 页面），返回缓存的首页
-          if (event.request.mode === 'navigate') {
-            return caches.match('/');
-          }
-          // 否则返回离线提示
-          return new Response('Offline - Please check your network connection', {
-            status: 503,
-            statusText: 'Service Unavailable'
-          });
-        });
-      })
-  );
+  // 不做任何事，浏览器直接走网络
 });
